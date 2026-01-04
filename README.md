@@ -1,7 +1,7 @@
 
   # Job Application Tracker Design
 
-  This is a code bundle for Job Application Tracker Design. The original project is available at https://www.figma.com/design/fkceU2pnIiIAlo3GCAeNp7/Job-Application-Tracker-Design.
+  This is a code bundle for Job Application Tracker Design. 
 
   ## Running the code
 
