@@ -56,14 +56,15 @@ export default function App() {
         );
 
         // Handle initial OAuth redirect on page load
-        const handleInitialAuth = async () => {
-          const { data: { session }, error } = await supabase.auth.getSession();
-          if (session && !currentUser) {
-            handleLogin(session.user.email || '', session.access_token);
-          }
-        };
+        // Note: Auto-login disabled - users must manually sign in
+        // const handleInitialAuth = async () => {
+        //   const { data: { session }, error } = await supabase.auth.getSession();
+        //   if (session && !currentUser) {
+        //     handleLogin(session.user.email || '', session.access_token);
+        //   }
+        // };
 
-        await handleInitialAuth();
+        // await handleInitialAuth();
 
         const { data } = supabase.auth.onAuthStateChange(
           async (event, session) => {
