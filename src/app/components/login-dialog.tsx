@@ -146,20 +146,24 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
       );
 
       // Configure redirect URL based on environment
-      let redirectUrl = `${window.location.origin}/`;
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      let redirectUrl;
+
+      if (isLocalhost) {
+        // For local development, use the current origin with explicit localhost
+        redirectUrl = `http://localhost:5173/`;
+        console.log('Local development detected. Using redirect URL:', redirectUrl);
+        console.log('Current location:', window.location.href);
+      } else {
+        // For production/live deployment, ensure the domain is configured in Supabase
+        redirectUrl = `${window.location.origin}/`;
+        console.log('Live deployment detected. Ensure your domain is added to Supabase OAuth redirect URLs.');
+      }
 
       console.log('Attempting Google OAuth sign-in...');
       console.log('Current URL:', window.location.href);
       console.log('Redirect URL:', redirectUrl);
       console.log('Protocol:', window.location.protocol);
-
-      // For production/live deployment, ensure the domain is configured in Supabase
-      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      if (!isLocalhost) {
-        // For live deployment, the redirect URL must be configured in Supabase dashboard
-        // under Authentication > Providers > Google > Redirect URLs
-        console.log('Live deployment detected. Ensure your domain is added to Supabase OAuth redirect URLs.');
-      }
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
