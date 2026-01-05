@@ -91,8 +91,8 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
         publicAnonKey
       );
 
-      // Use Supabase's OAuth callback URL
-      let redirectUrl = `https://nbmzwaarcsuukhlqjyvy.supabase.co/auth/v1/callback`;
+      // Redirect back to the app after OAuth
+      let redirectUrl = `${window.location.origin}/`;
 
 
 
