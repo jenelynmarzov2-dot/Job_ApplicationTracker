@@ -70,8 +70,19 @@ export default function App() {
         const { data } = supabase.auth.onAuthStateChange(
           async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
-              // Auto-login disabled - users must manually sign in
-              // OAuth redirects are handled but no automatic login occurs
+              // Only handle OAuth redirects, not existing sessions
+              const hasOAuthParams = window.location.hash.includes('access_token') ||
+                                    window.location.search.includes('code') ||
+                                    window.location.hash.includes('#') ||
+                                    window.location.search.includes('?');
+
+              if (hasOAuthParams && !currentUser) {
+                // This is an OAuth redirect - log the user in
+                handleLogin(session.user.email || '', session.access_token);
+                // Clean up URL parameters
+                window.history.replaceState({}, document.title, window.location.pathname);
+              }
+              // Ignore existing sessions - no auto-login
             } else if (event === 'SIGNED_OUT') {
               handleLogout();
             }

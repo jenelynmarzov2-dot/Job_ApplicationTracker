@@ -20,17 +20,15 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // Clear form fields when dialog opens or when switching between sign-in/sign-up
+  // Clear form fields when component mounts (dialog opens)
   useEffect(() => {
-    if (open) {
-      setEmail("");
-      setPassword("");
-      setName("");
-      setError("");
-      setLoading(false);
-      setShowPassword(false);
-    }
-  }, [open]);
+    setEmail("");
+    setPassword("");
+    setName("");
+    setError("");
+    setLoading(false);
+    setShowPassword(false);
+  }, []);
 
   // Clear form fields when switching between sign-in and sign-up modes
   useEffect(() => {
