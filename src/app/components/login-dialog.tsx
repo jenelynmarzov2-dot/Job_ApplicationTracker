@@ -120,10 +120,16 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
         publicAnonKey
       );
 
-      // Redirect back to the app after OAuth
+      // Configure redirect URL based on environment
       let redirectUrl = `${window.location.origin}/`;
 
-
+      // For production/live deployment, ensure the domain is configured in Supabase
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      if (!isLocalhost) {
+        // For live deployment, the redirect URL must be configured in Supabase dashboard
+        // under Authentication > Providers > Google > Redirect URLs
+        console.log('Live deployment detected. Ensure your domain is added to Supabase OAuth redirect URLs.');
+      }
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
