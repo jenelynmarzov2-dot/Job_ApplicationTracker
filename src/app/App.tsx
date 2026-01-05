@@ -88,8 +88,11 @@ export default function App() {
                   console.log('User already logged in, skipping duplicate login');
                 }
               } else if (event === 'SIGNED_OUT') {
-                console.log('User signed out');
-                handleLogout();
+                console.log('User signed out (external event)');
+                // Only handle external sign-out events, not our own signOut() calls
+                if (currentUser) {
+                  handleLogout();
+                }
               } else if (event === 'TOKEN_REFRESHED') {
                 console.log('Token refreshed successfully');
               }
@@ -230,18 +233,12 @@ export default function App() {
   };
 
   const handleLogout = async () => {
-    // Sign out from Supabase
-    try {
-      const { createClient } = await import('@supabase/supabase-js');
-      const supabase = createClient(
-        `https://${projectId}.supabase.co`,
-        publicAnonKey
-      );
-      await supabase.auth.signOut();
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+    // Prevent multiple logout calls
+    if (!currentUser) return;
 
+    console.log('Logging out user...');
+
+    // Clear local state first to prevent loops
     setCurrentUser(null);
     setAccessToken(null);
     localStorage.removeItem("currentUser");
@@ -256,6 +253,19 @@ export default function App() {
       imageUrl: "",
     });
     setActiveTab("home");
+
+    // Sign out from Supabase (this will trigger the auth state change, but we already cleared state)
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const supabase = createClient(
+        `https://${projectId}.supabase.co`,
+        publicAnonKey
+      );
+      await supabase.auth.signOut();
+      console.log('Successfully signed out from Supabase');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const handleSaveApplication = (applicationData: Omit<JobApplication, "id">) => {
