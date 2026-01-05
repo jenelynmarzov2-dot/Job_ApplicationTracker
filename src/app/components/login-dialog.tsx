@@ -94,9 +94,9 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
       // Determine redirect URL based on environment
       let redirectUrl = `${window.location.origin}/`;
 
-      // For local development, use localhost with the correct port
-      if (window.location.hostname === 'localhost') {
-        redirectUrl = `http://localhost:5173/`;
+      // For local development, use the current location
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        redirectUrl = window.location.href.replace(/\/$/, '/');
       }
 
       const { error } = await supabase.auth.signInWithOAuth({
