@@ -31,6 +31,10 @@ export default function App() {
     location: "San Francisco, CA",
     title: "Software Engineer",
     imageUrl: "",
+    country: "",
+    city: "",
+    municipality: "",
+    barangay: "",
   });
 
   const [applications, setApplications] = useState<JobApplication[]>([]);
@@ -150,6 +154,10 @@ export default function App() {
       location: "San Francisco, CA",
       title: "Software Engineer",
       imageUrl: "",
+      country: "",
+      city: "",
+      municipality: "",
+      barangay: "",
     });
     setActiveTab("home");
   };
