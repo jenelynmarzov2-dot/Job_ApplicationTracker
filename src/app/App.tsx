@@ -39,9 +39,12 @@ export default function App() {
 
   const [applications, setApplications] = useState<JobApplication[]>([]);
 
-  // Check for existing session on mount
+  // Clear login details on app startup for new users
   useEffect(() => {
-    checkSession();
+    // Clear any existing login data to ensure fresh start for each user
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("accessToken");
+    // Note: User data is kept for returning users who log in again
   }, []);
 
   // Separate effect for auth state changes
