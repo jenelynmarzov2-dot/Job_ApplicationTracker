@@ -66,15 +66,16 @@ export default function App() {
 
         // await handleInitialAuth();
 
-        const { data } = supabase.auth.onAuthStateChange(
-          async (event, session) => {
-            if (event === 'SIGNED_IN' && session) {
-              handleLogin(session.user.email || '', session.access_token);
-            } else if (event === 'SIGNED_OUT') {
-              handleLogout();
-            }
-          }
-        );
+        // Disabled auto-login from auth state changes
+        // const { data } = supabase.auth.onAuthStateChange(
+        //   async (event, session) => {
+        //     if (event === 'SIGNED_IN' && session) {
+        //       handleLogin(session.user.email || '', session.access_token);
+        //     } else if (event === 'SIGNED_OUT') {
+        //       handleLogout();
+        //     }
+        //   }
+        // );
 
         subscription = data.subscription;
       } catch (error) {
@@ -91,16 +92,7 @@ export default function App() {
     };
   }, []);
 
-  const checkSession = async () => {
-    const savedUser = localStorage.getItem("currentUser");
-    const savedToken = localStorage.getItem("accessToken");
-    
-    if (savedUser && savedToken) {
-      setCurrentUser(savedUser);
-      setAccessToken(savedToken);
-      loadUserData(savedUser);
-    }
-  };
+  // Removed checkSession function - no auto-login from localStorage
 
   // Save user data to localStorage whenever it changes
   useEffect(() => {
