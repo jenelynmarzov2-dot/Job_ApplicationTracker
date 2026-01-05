@@ -35,13 +35,8 @@ export default function App() {
 
   const [applications, setApplications] = useState<JobApplication[]>([]);
 
-  // Clear login details on app startup for new users
-  useEffect(() => {
-    // Clear any existing login data to ensure fresh start for each user
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("accessToken");
-    // Note: User data is kept for returning users who log in again
-  }, []);
+  // Note: Removed localStorage clearing on startup to allow OAuth redirects to work properly
+  // User data is kept for returning users who log in again
 
   // Separate effect for auth state changes
   useEffect(() => {
@@ -69,21 +64,43 @@ export default function App() {
         // Handle OAuth redirects (like Google sign-in) but prevent auto-login from existing sessions
         const { data } = supabase.auth.onAuthStateChange(
           async (event, session) => {
+            console.log('Auth state change:', event, session ? 'session exists' : 'no session');
+            console.log('Current URL:', window.location.href);
+            console.log('User agent:', navigator.userAgent);
+
             if (event === 'SIGNED_IN' && session) {
-              // Only handle OAuth redirects, not existing sessions
-              const hasOAuthParams = window.location.hash.includes('access_token') ||
-                                    window.location.search.includes('code') ||
+              // Check for OAuth parameters in URL (both search params and hash)
+              const urlParams = new URLSearchParams(window.location.search);
+              const hashParams = new URLSearchParams(window.location.hash.substring(1));
+              const hasOAuthParams = hashParams.has('access_token') ||
+                                    urlParams.has('code') ||
+                                    hashParams.has('type') ||
+                                    urlParams.has('error') ||
                                     window.location.hash.includes('#') ||
                                     window.location.search.includes('?');
 
+              console.log('OAuth params detected:', hasOAuthParams, 'Current user:', currentUser);
+              console.log('URL search:', window.location.search);
+              console.log('URL hash:', window.location.hash);
+
               if (hasOAuthParams && !currentUser) {
+                console.log('Processing OAuth redirect for user:', session.user.email);
                 // This is an OAuth redirect - log the user in
                 handleLogin(session.user.email || '', session.access_token);
-                // Clean up URL parameters
-                window.history.replaceState({}, document.title, window.location.pathname);
+                // Clean up URL parameters after a short delay to ensure login completes
+                setTimeout(() => {
+                  console.log('Cleaning up URL parameters');
+                  window.history.replaceState({}, document.title, window.location.pathname);
+                }, 500); // Increased delay for desktop browsers
+              } else if (!hasOAuthParams && !currentUser) {
+                // This might be a restored session - check if we should auto-login
+                console.log('Checking for existing session restoration');
+                // Only auto-login if there's no OAuth redirect happening
+                // This helps with page refreshes while logged in
               }
-              // Ignore existing sessions - no auto-login
+              // Ignore existing sessions during OAuth flow
             } else if (event === 'SIGNED_OUT') {
+              console.log('User signed out');
               handleLogout();
             }
           }
