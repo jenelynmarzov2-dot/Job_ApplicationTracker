@@ -100,11 +100,6 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
         redirectUrl = window.location.href;
       }
 
-      // Debug: Log the redirect URL being used
-      console.log('Google OAuth redirect URL:', redirectUrl);
-      console.log('Current location:', window.location.href);
-      console.log('Hostname:', window.location.hostname);
-
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {

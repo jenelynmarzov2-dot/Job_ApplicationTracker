@@ -59,6 +59,16 @@ export default function App() {
           publicAnonKey
         );
 
+        // Handle initial OAuth redirect on page load
+        const handleInitialAuth = async () => {
+          const { data: { session }, error } = await supabase.auth.getSession();
+          if (session && !currentUser) {
+            handleLogin(session.user.email || '', session.access_token);
+          }
+        };
+
+        await handleInitialAuth();
+
         const { data } = supabase.auth.onAuthStateChange(
           async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
