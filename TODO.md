@@ -14,7 +14,7 @@ To test the OAuth flow:
 5. Verify that OAuth redirects work on both platforms
 
 ## Current Issue
-Google OAuth works on mobile but not desktop. Added enhanced console logging to help debug the difference in behavior between platforms. Increased URL cleanup delay to 500ms for desktop browsers.
+Google OAuth still not working - users are being redirected back to login page. Made auth handling more permissive and added TOKEN_REFRESHED event logging. Increased URL cleanup delay to 1000ms.
 
 ## Details
 The problem is that the app clears localStorage on startup, which removes session data before OAuth redirects can be processed. The OAuth parameter detection is also too broad.

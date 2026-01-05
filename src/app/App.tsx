@@ -69,6 +69,8 @@ export default function App() {
             console.log('User agent:', navigator.userAgent);
 
             if (event === 'SIGNED_IN' && session) {
+              console.log('Session user:', session.user?.email, 'Session access_token exists:', !!session.access_token);
+
               // Check for OAuth parameters in URL (both search params and hash)
               const urlParams = new URLSearchParams(window.location.search);
               const hashParams = new URLSearchParams(window.location.hash.substring(1));
@@ -83,25 +85,24 @@ export default function App() {
               console.log('URL search:', window.location.search);
               console.log('URL hash:', window.location.hash);
 
-              if (hasOAuthParams && !currentUser) {
-                console.log('Processing OAuth redirect for user:', session.user.email);
-                // This is an OAuth redirect - log the user in
+              // Always log in if we have a session and no current user (more permissive)
+              if (!currentUser && session.user) {
+                console.log('Logging in user:', session.user.email);
                 handleLogin(session.user.email || '', session.access_token);
-                // Clean up URL parameters after a short delay to ensure login completes
+
+                // Clean up URL parameters after login completes
                 setTimeout(() => {
                   console.log('Cleaning up URL parameters');
                   window.history.replaceState({}, document.title, window.location.pathname);
-                }, 500); // Increased delay for desktop browsers
-              } else if (!hasOAuthParams && !currentUser) {
-                // This might be a restored session - check if we should auto-login
-                console.log('Checking for existing session restoration');
-                // Only auto-login if there's no OAuth redirect happening
-                // This helps with page refreshes while logged in
+                }, 1000); // Increased delay for desktop browsers
+              } else if (currentUser) {
+                console.log('User already logged in, ignoring auth state change');
               }
-              // Ignore existing sessions during OAuth flow
             } else if (event === 'SIGNED_OUT') {
               console.log('User signed out');
               handleLogout();
+            } else if (event === 'TOKEN_REFRESHED') {
+              console.log('Token refreshed');
             }
           }
         );

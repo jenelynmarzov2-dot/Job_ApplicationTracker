@@ -148,6 +148,11 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
       // Configure redirect URL based on environment
       let redirectUrl = `${window.location.origin}/`;
 
+      console.log('Attempting Google OAuth sign-in...');
+      console.log('Current URL:', window.location.href);
+      console.log('Redirect URL:', redirectUrl);
+      console.log('Protocol:', window.location.protocol);
+
       // For production/live deployment, ensure the domain is configured in Supabase
       const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       if (!isLocalhost) {
@@ -156,17 +161,27 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
         console.log('Live deployment detected. Ensure your domain is added to Supabase OAuth redirect URLs.');
       }
 
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
+
+      console.log('OAuth response:', { data, error });
 
       if (error) {
         throw new Error(error.message);
       }
+
+      // The OAuth flow should redirect automatically, so we don't set loading to false here
+      console.log('OAuth initiated, waiting for redirect...');
     } catch (err: any) {
+      console.error('Google sign-in error:', err);
       setError(err.message || 'Failed to sign in with Google');
       setLoading(false);
     }
