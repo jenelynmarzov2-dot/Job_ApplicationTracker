@@ -25,6 +25,25 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
     setError("");
     setLoading(true);
 
+    // Validate required fields
+    if (!email.trim()) {
+      setError("Email is required");
+      setLoading(false);
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Password is required");
+      setLoading(false);
+      return;
+    }
+
+    if (isSignUp && !name.trim()) {
+      setError("Name is required");
+      setLoading(false);
+      return;
+    }
+
     try {
       const { createClient } = await import('@supabase/supabase-js');
       const supabase = createClient(
@@ -35,11 +54,11 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
       if (isSignUp) {
         // Sign up flow using Supabase Auth directly
         const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
+          email: email.trim(),
+          password: password.trim(),
           options: {
             data: {
-              name: name,
+              name: name.trim(),
             }
           }
         });
@@ -69,8 +88,8 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
       } else {
         // Sign in flow
         const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
+          email: email.trim(),
+          password: password.trim(),
         });
 
         if (error) {

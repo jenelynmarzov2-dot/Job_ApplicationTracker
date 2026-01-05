@@ -66,16 +66,21 @@ export default function App() {
 
         // await handleInitialAuth();
 
-        // Disabled auto-login from auth state changes
-        // const { data } = supabase.auth.onAuthStateChange(
-        //   async (event, session) => {
-        //     if (event === 'SIGNED_IN' && session) {
-        //       handleLogin(session.user.email || '', session.access_token);
-        //     } else if (event === 'SIGNED_OUT') {
-        //       handleLogout();
-        //     }
-        //   }
-        // );
+        // Handle OAuth redirects (like Google sign-in) but prevent auto-login from existing sessions
+        const { data } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+              // Only auto-login if this is an OAuth redirect (not from existing session)
+              const isOAuthRedirect = window.location.hash.includes('access_token') ||
+                                     window.location.search.includes('code');
+              if (isOAuthRedirect && !currentUser) {
+                handleLogin(session.user.email || '', session.access_token);
+              }
+            } else if (event === 'SIGNED_OUT') {
+              handleLogout();
+            }
+          }
+        );
 
         subscription = data.subscription;
       } catch (error) {
