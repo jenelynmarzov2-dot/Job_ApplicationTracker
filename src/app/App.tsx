@@ -41,75 +41,72 @@ export default function App() {
   // Separate effect for auth state changes
   useEffect(() => {
     let subscription: any = null;
+    let isHandlingAuth = false; // Prevent concurrent auth handling
 
     const setupAuth = async () => {
       try {
+        console.log('Setting up auth listener...');
         const { createClient } = await import('@supabase/supabase-js');
         const supabase = createClient(
           `https://${projectId}.supabase.co`,
           publicAnonKey
         );
 
-        // Handle initial OAuth redirect on page load
-        // Note: Auto-login disabled - users must manually sign in
-        // const handleInitialAuth = async () => {
-        //   const { data: { session }, error } = await supabase.auth.getSession();
-        //   if (session && !currentUser) {
-        //     handleLogin(session.user.email || '', session.access_token);
-        //   }
-        // };
-
-        // await handleInitialAuth();
-
-        // Handle OAuth redirects (like Google sign-in) but prevent auto-login from existing sessions
+        // Handle OAuth redirects (like Google sign-in)
         const { data } = supabase.auth.onAuthStateChange(
           async (event, session) => {
-            console.log('Auth state change:', event, session ? 'session exists' : 'no session');
-            console.log('Current URL:', window.location.href);
-            console.log('User agent:', navigator.userAgent);
+            // Prevent concurrent auth handling
+            if (isHandlingAuth) {
+              console.log('Auth handling already in progress, skipping');
+              return;
+            }
 
-            if (event === 'SIGNED_IN' && session) {
-              console.log('Session user:', session.user?.email, 'Session access_token exists:', !!session.access_token);
+            isHandlingAuth = true;
 
-              // Check for OAuth parameters in URL (both search params and hash)
-              const urlParams = new URLSearchParams(window.location.search);
-              const hashParams = new URLSearchParams(window.location.hash.substring(1));
-              const hasOAuthParams = hashParams.has('access_token') ||
-                                    urlParams.has('code') ||
-                                    hashParams.has('type') ||
-                                    urlParams.has('error') ||
-                                    window.location.hash.includes('#') ||
-                                    window.location.search.includes('?');
+            try {
+              console.log('Auth state change:', event, 'Session exists:', !!session);
 
-              console.log('OAuth params detected:', hasOAuthParams, 'Current user:', currentUser);
-              console.log('URL search:', window.location.search);
-              console.log('URL hash:', window.location.hash);
+              if (event === 'SIGNED_IN' && session && session.user) {
+                console.log('User signed in:', session.user.email);
 
-              // Always log in if we have a session and no current user (more permissive)
-              if (!currentUser && session.user) {
-                console.log('Logging in user:', session.user.email);
-                handleLogin(session.user.email || '', session.access_token);
+                // Prevent duplicate logins
+                if (!currentUser) {
+                  console.log('Logging in user:', session.user.email);
+                  handleLogin(session.user.email || '', session.access_token);
 
-                // Clean up URL parameters after login completes
-                setTimeout(() => {
-                  console.log('Cleaning up URL parameters');
-                  window.history.replaceState({}, document.title, window.location.pathname);
-                }, 1000); // Increased delay for desktop browsers
-              } else if (currentUser) {
-                console.log('User already logged in, ignoring auth state change');
+                  // Clean up URL parameters after a longer delay to ensure login completes
+                  setTimeout(() => {
+                    try {
+                      console.log('Cleaning up URL parameters');
+                      // Use replaceState instead of pushState to avoid navigation issues
+                      window.history.replaceState({}, document.title, window.location.pathname);
+                    } catch (error) {
+                      console.error('Error cleaning up URL:', error);
+                    }
+                  }, 2000); // Increased delay for OAuth stability
+                } else {
+                  console.log('User already logged in, skipping duplicate login');
+                }
+              } else if (event === 'SIGNED_OUT') {
+                console.log('User signed out');
+                handleLogout();
+              } else if (event === 'TOKEN_REFRESHED') {
+                console.log('Token refreshed successfully');
               }
-            } else if (event === 'SIGNED_OUT') {
-              console.log('User signed out');
-              handleLogout();
-            } else if (event === 'TOKEN_REFRESHED') {
-              console.log('Token refreshed');
+            } catch (error) {
+              console.error('Error in auth state change handler:', error);
+              // Don't crash the app on auth errors
+            } finally {
+              isHandlingAuth = false;
             }
           }
         );
 
         subscription = data.subscription;
+        console.log('Auth listener setup complete');
       } catch (error) {
         console.error('Failed to setup auth listener:', error);
+        // Don't crash the app if auth setup fails
       }
     };
 
@@ -117,10 +114,15 @@ export default function App() {
 
     return () => {
       if (subscription) {
-        subscription.unsubscribe();
+        try {
+          subscription.unsubscribe();
+          console.log('Auth subscription cleaned up');
+        } catch (error) {
+          console.error('Error cleaning up auth subscription:', error);
+        }
       }
     };
-  }, []);
+  }, [currentUser]); // Add currentUser to dependencies to prevent stale closure issues
 
   // Removed checkSession function - no auto-login from localStorage
 
@@ -132,15 +134,44 @@ export default function App() {
   }, [personalInfo, applications, currentUser]);
 
   const loadUserData = (userEmail: string) => {
-    const userDataKey = `userData_${userEmail}`;
-    const savedData = localStorage.getItem(userDataKey);
-    
-    if (savedData) {
-      const userData: UserData = JSON.parse(savedData);
-      setPersonalInfo(userData.personalInfo);
-      setApplications(userData.applications);
-    } else {
-      // New user - set default empty state
+    try {
+      const userDataKey = `userData_${userEmail}`;
+      const savedData = localStorage.getItem(userDataKey);
+
+      if (savedData) {
+        try {
+          const userData: UserData = JSON.parse(savedData);
+          setPersonalInfo(userData.personalInfo);
+          setApplications(userData.applications);
+        } catch (parseError) {
+          console.error('Error parsing user data from localStorage:', parseError);
+          // Clear corrupted data and set defaults
+          localStorage.removeItem(userDataKey);
+          setPersonalInfo({
+            name: userEmail.split("@")[0] || "User",
+            email: userEmail,
+            phone: "",
+            location: "",
+            title: "Job Seeker",
+            imageUrl: "",
+          });
+          setApplications([]);
+        }
+      } else {
+        // New user - set default empty state
+        setPersonalInfo({
+          name: userEmail.split("@")[0] || "User",
+          email: userEmail,
+          phone: "",
+          location: "",
+          title: "Job Seeker",
+          imageUrl: "",
+        });
+        setApplications([]);
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+      // Set defaults if localStorage access fails
       setPersonalInfo({
         name: userEmail.split("@")[0] || "User",
         email: userEmail,
