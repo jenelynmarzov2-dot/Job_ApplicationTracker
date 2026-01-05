@@ -70,10 +70,15 @@ export default function App() {
         const { data } = supabase.auth.onAuthStateChange(
           async (event, session) => {
             if (event === 'SIGNED_IN' && session) {
-              // Only auto-login if this is an OAuth redirect (not from existing session)
-              const isOAuthRedirect = window.location.hash.includes('access_token') ||
-                                     window.location.search.includes('code');
-              if (isOAuthRedirect && !currentUser) {
+              // Only auto-login if this is a fresh OAuth sign-in (not from existing session)
+              // Check if this is a new sign-in by looking for OAuth parameters or if user just signed in
+              const hasOAuthParams = window.location.hash.includes('access_token') ||
+                                    window.location.search.includes('code') ||
+                                    window.location.hash.includes('#') ||
+                                    window.location.search.includes('?');
+              const isNewSignIn = !currentUser && session.user;
+
+              if ((hasOAuthParams || isNewSignIn) && !currentUser) {
                 handleLogin(session.user.email || '', session.access_token);
               }
             } else if (event === 'SIGNED_OUT') {
@@ -246,7 +251,7 @@ export default function App() {
 
   // Show login dialog if not logged in
   if (!currentUser) {
-    return <LoginDialog open={true} onLogin={handleLogin} />;
+    return <LoginDialog key={`login-dialog-${Date.now()}`} open={true} onLogin={handleLogin} />;
   }
 
   return (

@@ -93,6 +93,9 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
           // User created but needs email confirmation
           setError('Account created! Please check your email to confirm your account before signing in.');
           setLoading(false);
+          // Clear form fields for new user
+          setName("");
+          setPassword("");
           return;
         }
 
@@ -100,7 +103,7 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
           // User created and confirmed - show success message instead of auto-login
           setError('Account created successfully! You can now sign in with your credentials.');
           setLoading(false);
-          // Reset form to sign-in mode
+          // Reset form to sign-in mode and clear fields
           setIsSignUp(false);
           setName("");
           setPassword("");
