@@ -59,17 +59,17 @@ export function ProfileDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] border-2 border-pink-200 bg-gradient-to-br from-white to-pink-50">
+      <DialogContent className="sm:max-w-[500px] border-2 border-blue-200 bg-gradient-to-br from-white to-blue-50">
         <DialogHeader>
-          <DialogTitle className="text-pink-700">Edit Personal Information 💕</DialogTitle>
+          <DialogTitle className="text-blue-700">Edit Personal Information 💕</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
-                <Avatar className="w-24 h-24 border-4 border-pink-300 shadow-lg">
+                <Avatar className="w-24 h-24 border-4 border-blue-300 shadow-lg">
                   <AvatarImage src={formData.imageUrl} />
-                  <AvatarFallback className="bg-gradient-to-br from-pink-300 to-pink-500 text-white">
+                  <AvatarFallback className="bg-gradient-to-br from-blue-300 to-blue-500 text-white">
                     {formData.name
                       .split(" ")
                       .map((n) => n[0])
@@ -81,7 +81,7 @@ export function ProfileDialog({
                   type="button"
                   size="icon"
                   variant="secondary"
-                  className="absolute bottom-0 right-0 rounded-full w-8 h-8 bg-pink-500 hover:bg-pink-600 text-white border-2 border-white shadow-md"
+                  className="absolute bottom-0 right-0 rounded-full w-8 h-8 bg-blue-500 hover:bg-blue-600 text-white border-2 border-white shadow-md"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <Camera className="w-4 h-4" />
@@ -94,37 +94,37 @@ export function ProfileDialog({
                   onChange={handleImageChange}
                 />
               </div>
-              <p className="text-sm text-pink-600">Click camera icon to upload photo</p>
+              <p className="text-sm text-blue-600">Click camera icon to upload photo</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-pink-700">Full Name</Label>
+              <Label htmlFor="name" className="text-blue-700">Full Name</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-pink-700">Professional Title</Label>
+              <Label htmlFor="title" className="text-blue-700">Professional Title</Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 placeholder="e.g., Software Engineer"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-pink-700">Email</Label>
+              <Label htmlFor="email" className="text-blue-700">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -132,13 +132,13 @@ export function ProfileDialog({
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-pink-700">Phone</Label>
+              <Label htmlFor="phone" className="text-blue-700">Phone</Label>
               <Input
                 id="phone"
                 type="tel"
@@ -146,28 +146,28 @@ export function ProfileDialog({
                 onChange={(e) =>
                   setFormData({ ...formData, phone: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location" className="text-pink-700">Location</Label>
+              <Label htmlFor="location" className="text-blue-700">Location</Label>
               <Input
                 id="location"
                 value={formData.location}
                 onChange={(e) =>
                   setFormData({ ...formData, location: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 placeholder="e.g., Manila, Philippines"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-2 border-pink-200 text-pink-600 hover:bg-pink-50">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-2 border-blue-200 text-blue-600 hover:bg-blue-50">
               Cancel
             </Button>
-            <Button type="submit" className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg">Save Changes</Button>
+            <Button type="submit" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg">Save Changes</Button>
           </DialogFooter>
         </form>
       </DialogContent>

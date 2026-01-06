@@ -56,52 +56,52 @@ export function AddApplicationDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] border-2 border-pink-200 bg-gradient-to-br from-white to-pink-50">
+      <DialogContent className="sm:max-w-[425px] border-2 border-blue-200 bg-gradient-to-br from-white to-blue-50">
         <DialogHeader>
-          <DialogTitle className="text-pink-700">
+          <DialogTitle className="text-blue-700">
             {editingApplication ? "Edit Application ✏️" : "Add New Application ✨"}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="company" className="text-pink-700">Company Name</Label>
+              <Label htmlFor="company" className="text-blue-700">Company Name</Label>
               <Input
                 id="company"
                 value={formData.company}
                 onChange={(e) =>
                   setFormData({ ...formData, company: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="position" className="text-pink-700">Position</Label>
+              <Label htmlFor="position" className="text-blue-700">Position</Label>
               <Input
                 id="position"
                 value={formData.position}
                 onChange={(e) =>
                   setFormData({ ...formData, position: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="location" className="text-pink-700">Location</Label>
+              <Label htmlFor="location" className="text-blue-700">Location</Label>
               <Input
                 id="location"
                 value={formData.location}
                 onChange={(e) =>
                   setFormData({ ...formData, location: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="status" className="text-pink-700">Status</Label>
+              <Label htmlFor="status" className="text-blue-700">Status</Label>
               <Select
                 value={formData.status}
                 onValueChange={(value) =>
@@ -111,10 +111,10 @@ export function AddApplicationDialog({
                   })
                 }
               >
-                <SelectTrigger className="border-2 border-pink-200 focus:border-pink-400">
+                <SelectTrigger className="border-2 border-blue-200 focus:border-blue-400">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="border-2 border-pink-200">
+                <SelectContent className="border-2 border-blue-200">
                   <SelectItem value="applied">Applied</SelectItem>
                   <SelectItem value="interview">Interview</SelectItem>
                   <SelectItem value="offer">Offer</SelectItem>
@@ -123,7 +123,7 @@ export function AddApplicationDialog({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="appliedDate" className="text-pink-700">Applied Date</Label>
+              <Label htmlFor="appliedDate" className="text-blue-700">Applied Date</Label>
               <Input
                 id="appliedDate"
                 type="date"
@@ -131,28 +131,28 @@ export function AddApplicationDialog({
                 onChange={(e) =>
                   setFormData({ ...formData, appliedDate: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="notes" className="text-pink-700">Notes</Label>
+              <Label htmlFor="notes" className="text-blue-700">Notes</Label>
               <Textarea
                 id="notes"
                 value={formData.notes}
                 onChange={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
                 }
-                className="border-2 border-pink-200 focus:border-pink-400"
+                className="border-2 border-blue-200 focus:border-blue-400"
                 rows={3}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-2 border-pink-200 text-pink-600 hover:bg-pink-50">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-2 border-blue-200 text-blue-600 hover:bg-blue-50">
               Cancel
             </Button>
-            <Button type="submit" className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg">
+            <Button type="submit" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg">
               {editingApplication ? "Update" : "Add"} Application
             </Button>
           </DialogFooter>

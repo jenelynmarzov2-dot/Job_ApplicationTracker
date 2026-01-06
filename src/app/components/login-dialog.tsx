@@ -14,6 +14,7 @@ interface LoginDialogProps {
 export function LoginDialog({ open, onLogin }: LoginDialogProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,7 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
     if (open) {
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
       setName("");
       setError("");
       setLoading(false);
@@ -36,6 +38,7 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
   useEffect(() => {
     setEmail("");
     setPassword("");
+    setConfirmPassword("");
     setName("");
     setError("");
     setLoading(false);
@@ -62,6 +65,12 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
 
     if (isSignUp && !name.trim()) {
       setError("Name is required");
+      setLoading(false);
+      return;
+    }
+
+    if (isSignUp && password !== confirmPassword) {
+      setError("Passwords do not match");
       setLoading(false);
       return;
     }
@@ -96,6 +105,7 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
           // Clear form fields for new user
           setName("");
           setPassword("");
+          setConfirmPassword("");
           return;
         }
 
@@ -194,82 +204,104 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
   return (
     <Dialog open={open}>
       <DialogContent
-        className="sm:max-w-md"
+        className="sm:max-w-md bg-gradient-to-br from-blue-50 via-white to-purple-50 border-0 shadow-2xl"
         onPointerDownOutside={(e) => e.preventDefault()}
         onInteractOutside={(e) => e.preventDefault()}
       >
-        <DialogHeader>
-          <DialogTitle className="text-2xl text-center text-pink-700">
-            {isSignUp ? "Create Account ✨" : "Welcome Back 💕"}
-          </DialogTitle>
-          <DialogDescription className="text-center text-pink-600">
-            {isSignUp
-              ? "Sign up to start tracking your job applications"
-              : "Sign in to access your job applications"}
-          </DialogDescription>
-        </DialogHeader>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-transparent to-purple-400/10 rounded-lg"></div>
+        <div className="relative z-10">
+          <DialogHeader className="text-center mb-8">
+            <DialogTitle className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3 flex items-center justify-center">
+              <Mail className="w-12 h-10 text-blue-600 mr-3 self-center" />
+              {isSignUp ? "Create Account" : "Welcome Back"}
+            </DialogTitle>
+            <DialogDescription className="text-gray-600 text-base text-center">
+              {isSignUp
+                ? "Sign up to start tracking your job applications"
+                : "Sign in to access your job applications"}
+            </DialogDescription>
+          </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+        <form onSubmit={handleSubmit} className="space-y-5 px-1">
           {isSignUp && (
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name" className="text-sm font-medium text-gray-700">Full Name</Label>
               <div className="relative">
-                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600 z-10" />
                 <Input
                   id="name"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Enter your full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required={isSignUp}
-                  className="pl-10"
+                  className="pl-12 border-gray-300 hover:border-blue-400 focus:border-blue-500 hover:shadow-none focus:shadow-none bg-white/90 backdrop-blur-sm transition-all duration-200"
                 />
               </div>
             </div>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email Address</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600 z-10" />
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10"
+                className="pl-12 border-gray-300 hover:border-blue-400 focus:border-blue-500 hover:shadow-none focus:shadow-none bg-white/90 backdrop-blur-sm transition-all duration-200"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-sm font-medium text-gray-700">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600 z-10" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="pl-10 pr-10"
+                className="pl-12 pr-12 border-gray-300 hover:border-blue-400 focus:border-blue-500 hover:shadow-none focus:shadow-none bg-white/90 backdrop-blur-sm transition-all duration-200"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground hover:text-foreground"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 hover:text-blue-500 transition-colors duration-200 z-10"
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
             {isSignUp && (
-              <p className="text-xs text-muted-foreground">Minimum 6 characters</p>
+              <p className="text-xs text-gray-500">Minimum 6 characters</p>
             )}
           </div>
+
+          {isSignUp && (
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">Confirm Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-blue-600 z-10" />
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required={isSignUp}
+                  minLength={6}
+                  className="pl-12 border-gray-300 hover:border-blue-400 focus:border-blue-500 hover:shadow-none focus:shadow-none bg-white/90 backdrop-blur-sm transition-all duration-200"
+                />
+              </div>
+            </div>
+          )}
 
           {error && (
             <div className="bg-red-50 border-2 border-red-200 rounded-lg p-3">
@@ -281,7 +313,7 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg"
+              className="w-full bg-blue-800 hover:bg-blue-900 text-white font-semibold flex items-center justify-center"
             >
               {loading ? "Processing..." : (
                 <>
@@ -306,7 +338,7 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
               type="button"
               variant="outline"
               disabled={loading}
-              className="w-full border-2 border-pink-300 text-pink-600 hover:bg-pink-50 hover:text-pink-700"
+              className="w-full border-2 border-black-300 text-black-600 hover:bg-white-50 hover:text-black-700"
               onClick={handleGoogleSignIn}
             >
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -347,6 +379,7 @@ export function LoginDialog({ open, onLogin }: LoginDialogProps) {
             </button>
           </div>
         </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

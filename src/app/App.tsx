@@ -1,4 +1,4 @@
- import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "./components/ui/avatar";
@@ -316,17 +316,24 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-400 rounded-full blur-xl"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-emerald-400 rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-purple-400 rounded-full blur-xl"></div>
+        <div className="absolute bottom-40 right-10 w-28 h-28 bg-orange-400 rounded-full blur-xl"></div>
+      </div>
       {/* Header */}
-      <header className="bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10 shadow-sm">
+      <header className="bg-gradient-to-r from-blue-800 via-blue-900 to-indigo-900 backdrop-blur-sm border-b sticky top-0 z-10 shadow-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-primary p-2 rounded-full shadow-sm">
-                <Calendar className="w-6 h-6 text-primary-foreground" />
+              <div className="bg-blue-800 p-2 rounded-full shadow-sm">
+                <Calendar className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-foreground">
-                Job Application Tracker ✨
+              <h1 className="text-2xl font-bold text-white">
+                Job Tracker
               </h1>
             </div>
             <div className="flex items-center gap-2">
@@ -334,7 +341,7 @@ export default function App() {
                 variant="outline"
                 size="sm"
                 onClick={() => setActiveTab("home")}
-                className="gap-2"
+                className="gap-2 border-black text-black hover:bg-white hover:text-blue-800"
               >
                 <Home className="w-4 h-4" />
                 Home
@@ -343,7 +350,7 @@ export default function App() {
                 variant="outline"
                 size="sm"
                 onClick={handleLogout}
-                className="gap-2"
+                className="gap-2 border-black text-black hover:bg-white hover:text-blue-800"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -355,33 +362,229 @@ export default function App() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
-            <TabsTrigger value="home">
-              <Home className="w-4 h-4 mr-2" />
+        <div className="space-y-6">
+          {/* Tab Navigation */}
+          <div className="flex justify-center gap-4" style={{ zIndex: 50, position: 'relative' }}>
+            <button
+              onClick={() => {
+                console.log("Home button clicked");
+                setActiveTab("home");
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                backgroundColor: activeTab === "home" ? "#3b82f6" : "transparent",
+                border: "1px solid #3b82f6",
+                color: activeTab === "home" ? "white" : "#3b82f6",
+                padding: "8px 16px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "500"
+              }}
+            >
+              <Home className="w-4 h-4" />
               Home
-            </TabsTrigger>
-            <TabsTrigger value="calendar">
-              <Calendar className="w-4 h-4 mr-2" />
+            </button>
+            <button
+              onClick={() => {
+                console.log("Calendar button clicked");
+                setActiveTab("calendar");
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                backgroundColor: activeTab === "calendar" ? "#3b82f6" : "transparent",
+                border: "1px solid #3b82f6",
+                color: activeTab === "calendar" ? "white" : "#3b82f6",
+                padding: "8px 16px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "500"
+              }}
+            >
+              <Calendar className="w-4 h-4" />
               Calendar
-            </TabsTrigger>
-            <TabsTrigger value="profile">
-              <User className="w-4 h-4 mr-2" />
+            </button>
+            <button
+              onClick={() => {
+                console.log("Profile button clicked");
+                setActiveTab("profile");
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                backgroundColor: activeTab === "profile" ? "#3b82f6" : "transparent",
+                border: "1px solid #3b82f6",
+                color: activeTab === "profile" ? "white" : "#3b82f6",
+                padding: "8px 16px",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "500"
+              }}
+            >
+              <User className="w-4 h-4" />
               Profile
-            </TabsTrigger>
-          </TabsList>
+            </button>
+          </div>
 
           {/* Home Tab */}
-          <TabsContent value="home" className="space-y-6">
-            {/* Profile Card */}
-            <Card className="shadow-xl border-2 border-pink-200 bg-gradient-to-br from-white to-pink-50">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
+          {activeTab === "home" && (
+            <div className="space-y-6">
+              {/* Welcome Section */}
+              <div className="text-center py-8 animate-fade-in">
+                <h1 className="text-4xl font-bold text-gray-800 mb-2 animate-slide-up">Welcome back, {personalInfo.name.split(" ")[0]}! 👋</h1>
+                <p className="text-lg text-gray-600 animate-slide-up animation-delay-200">Let's track your job applications and land your dream job!</p>
+                <div className="mt-4 flex justify-center space-x-4 animate-slide-up animation-delay-400">
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-pulse-slow">
+                    🎯 Focus on Quality
+                  </div>
+                  <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-pulse-slow animation-delay-100">
+                    📈 Track Progress
+                  </div>
+                  <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-pulse-slow animation-delay-200">
+                    🚀 Achieve Goals
+                  </div>
+                </div>
+              </div>
+
+              {/* Profile Card */}
+              <Card className="shadow-xl border-2 border-blue-800 bg-gradient-to-br from-white to-gray-50 hover:shadow-2xl transition-all duration-300">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <Avatar className="w-16 h-16 border-4 border-blue-800 shadow-lg">
+                          <AvatarImage src={personalInfo.imageUrl} />
+                          <AvatarFallback className="bg-blue-800 text-white">
+                            {personalInfo.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="absolute -bottom-1 -right-1 bg-orange-500 rounded-full p-1">
+                          <span className="text-white text-xs">✨</span>
+                        </div>
+                      </div>
+                      <div>
+                        <CardTitle className="text-gray-800">{personalInfo.name}</CardTitle>
+                        <CardDescription className="text-gray-600">{personalInfo.title}</CardDescription>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowProfileDialog(true)}
+                      className="border-2 border-blue-800 text-blue-800 hover:bg-blue-800 hover:text-white shadow-sm"
+                    >
+                      Edit Profile
+                    </Button>
+                  </div>
+                </CardHeader>
+              </Card>
+
+              {/* Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <Card className="border-2 border-blue-800 bg-gradient-to-br from-blue-50 via-white to-blue-100 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="text-blue-800 font-semibold">📋 Total Applications</CardDescription>
+                    <CardTitle className="text-4xl text-blue-900 font-bold">{applications.length}</CardTitle>
+                  </CardHeader>
+                </Card>
+                <Card className="border-2 border-emerald-500 bg-gradient-to-br from-emerald-50 via-white to-emerald-100 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="text-emerald-700 font-semibold">🚀 Applied</CardDescription>
+                    <CardTitle className="text-4xl text-emerald-800 font-bold">
+                      {getStatusCount("applied")}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+                <Card className="border-2 border-orange-500 bg-gradient-to-br from-orange-50 via-white to-orange-100 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="text-orange-700 font-semibold">🎯 Interviews</CardDescription>
+                    <CardTitle className="text-4xl text-orange-800 font-bold">
+                      {getStatusCount("interview")}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+                <Card className="border-2 border-emerald-500 bg-gradient-to-br from-green-50 via-white to-green-100 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="text-green-700 font-semibold">🎉 Offers</CardDescription>
+                    <CardTitle className="text-4xl text-green-800 font-bold">
+                      {getStatusCount("offer")}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+                <Card className="border-2 border-red-500 bg-gradient-to-br from-red-50 via-white to-red-100 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                  <CardHeader className="pb-3">
+                    <CardDescription className="text-red-700 font-semibold">❌ Rejected</CardDescription>
+                    <CardTitle className="text-4xl text-red-800 font-bold">
+                      {getStatusCount("rejected")}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </div>
+
+              {/* Applications List */}
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold">My Applications</h2>
+                <Button onClick={() => {
+                  console.log('Add application button clicked');
+                  setEditingApplication(null);
+                  setShowAddDialog(true);
+                }} size="icon" className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg border-2 border-blue-800 z-50 w-12 h-12" title="Add Application">
+                  <Plus className="w-6 h-6" />
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {applications.map((application) => (
+                  <JobApplicationCard
+                    key={application.id}
+                    application={application}
+                    onEdit={handleEditApplication}
+                    onDelete={handleDeleteApplication}
+                  />
+                ))}
+              </div>
+
+              {applications.length === 0 && (
+                <Card className="p-12">
+                  <div className="text-center space-y-2">
+                    <p>No applications yet</p>
+                    </div>
+                </Card>
+              )}
+            </div>
+          )}
+
+          {/* Calendar Tab */}
+          {activeTab === "calendar" && (
+            <ApplicationCalendar applications={applications} />
+          )}
+
+          {/* Profile Tab */}
+          {activeTab === "profile" && (
+            <div className="space-y-6">
+              <Card className="shadow-xl border-2 border-blue-800 bg-gradient-to-br from-white to-gray-50">
+                <CardHeader>
+                  <CardTitle className="text-gray-800">Personal Information 💼</CardTitle>
+                  <CardDescription className="text-gray-600">
+                    Manage your personal details and profile picture
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex flex-col items-center gap-4">
                     <div className="relative">
-                      <Avatar className="w-16 h-16 border-4 border-pink-300 shadow-lg">
+                      <Avatar className="w-32 h-32 border-4 border-blue-800 shadow-lg">
                         <AvatarImage src={personalInfo.imageUrl} />
-                        <AvatarFallback className="bg-gradient-to-br from-pink-300 to-pink-500 text-white">
+                        <AvatarFallback className="text-2xl bg-blue-800 text-white">
                           {personalInfo.name
                             .split(" ")
                             .map((n) => n[0])
@@ -389,199 +592,83 @@ export default function App() {
                             .toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="absolute -bottom-1 -right-1 bg-pink-500 rounded-full p-1">
-                        <span className="text-white text-xs">✨</span>
+                      <div className="absolute -bottom-2 -right-2 bg-orange-500 rounded-full p-2">
+                        <span className="text-white">✨</span>
                       </div>
                     </div>
-                    <div>
-                      <CardTitle className="text-pink-700">{personalInfo.name}</CardTitle>
-                      <CardDescription className="text-pink-600">{personalInfo.title}</CardDescription>
+                    <Button onClick={() => setShowProfileDialog(true)} className="bg-blue-800 hover:bg-blue-900 text-white shadow-lg">
+                      Edit Profile
+                    </Button>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-gray-50 p-4 rounded-lg border-2 border-blue-800">
+                        <p className="text-sm text-gray-600">Full Name</p>
+                        <p className="font-medium text-gray-800">{personalInfo.name}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg border-2 border-blue-800">
+                        <p className="text-sm text-gray-600">Professional Title</p>
+                        <p className="font-medium text-gray-800">{personalInfo.title}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg border-2 border-blue-800">
+                        <p className="text-sm text-gray-600">Email</p>
+                        <p className="font-medium text-gray-800">{personalInfo.email}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg border-2 border-blue-800">
+                        <p className="text-sm text-gray-600">Phone</p>
+                        <p className="font-medium text-gray-800">{personalInfo.phone}</p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg border-2 border-blue-800">
+                        <p className="text-sm text-gray-600">Location</p>
+                        <p className="font-medium text-gray-800">{personalInfo.location}</p>
+                      </div>
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowProfileDialog(true)}
-                    className="border-2 border-pink-300 text-pink-600 hover:bg-pink-50 hover:text-pink-700 shadow-sm"
-                  >
-                    Edit Profile
-                  </Button>
-                </div>
-              </CardHeader>
-            </Card>
+                </CardContent>
+              </Card>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardDescription>Total Applications</CardDescription>
-                  <CardTitle className="text-3xl">{applications.length}</CardTitle>
+              {/* Application Summary */}
+              <Card className="shadow-xl border-2 border-blue-800 bg-gradient-to-br from-white to-gray-50">
+                <CardHeader>
+                  <CardTitle className="text-gray-800">Application Summary 📊</CardTitle>
                 </CardHeader>
-              </Card>
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardDescription>Applied</CardDescription>
-                  <CardTitle className="text-3xl">
-                    {getStatusCount("applied")}
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardDescription>Interviews</CardDescription>
-                  <CardTitle className="text-3xl">
-                    {getStatusCount("interview")}
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardDescription>Offers</CardDescription>
-                  <CardTitle className="text-3xl">
-                    {getStatusCount("offer")}
-                  </CardTitle>
-                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-2 border-blue-800">
+                      <span className="text-gray-800">Total Applications</span>
+                      <span className="font-semibold text-gray-800">{applications.length}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-2 border-emerald-500">
+                      <span className="text-emerald-700">Applied</span>
+                      <span className="font-semibold text-emerald-600">
+                        {getStatusCount("applied")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-2 border-orange-500">
+                      <span className="text-orange-700">Interviews</span>
+                      <span className="font-semibold text-orange-600">
+                        {getStatusCount("interview")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-2 border-emerald-500">
+                      <span className="text-emerald-700">Offers</span>
+                      <span className="font-semibold text-emerald-600">
+                        {getStatusCount("offer")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-2 border-red-500">
+                      <span className="text-red-700">Rejected</span>
+                      <span className="font-semibold text-red-600">
+                        {getStatusCount("rejected")}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
             </div>
-
-            {/* Applications List */}
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">My Applications</h2>
-              <Button onClick={() => {
-                setEditingApplication(null);
-                setShowAddDialog(true);
-              }}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Application
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {applications.map((application) => (
-                <JobApplicationCard
-                  key={application.id}
-                  application={application}
-                  onEdit={handleEditApplication}
-                  onDelete={handleDeleteApplication}
-                />
-              ))}
-            </div>
-
-            {applications.length === 0 && (
-              <Card className="p-12">
-                <div className="text-center space-y-2">
-                  <p>No applications yet</p>
-                  <Button onClick={() => setShowAddDialog(true)}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Your First Application
-                  </Button>
-                </div>
-              </Card>
-            )}
-          </TabsContent>
-
-          {/* Calendar Tab */}
-          <TabsContent value="calendar">
-            <ApplicationCalendar applications={applications} />
-          </TabsContent>
-
-          {/* Profile Tab */}
-          <TabsContent value="profile" className="space-y-6">
-            <Card className="shadow-xl border-2 border-pink-200 bg-gradient-to-br from-white to-pink-50">
-              <CardHeader>
-                <CardTitle className="text-pink-700">Personal Information 💕</CardTitle>
-                <CardDescription className="text-pink-600">
-                  Manage your personal details and profile picture
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="relative">
-                    <Avatar className="w-32 h-32 border-4 border-pink-300 shadow-lg">
-                      <AvatarImage src={personalInfo.imageUrl} />
-                      <AvatarFallback className="text-2xl bg-gradient-to-br from-pink-300 to-pink-500 text-white">
-                        {personalInfo.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="absolute -bottom-2 -right-2 bg-pink-500 rounded-full p-2">
-                      <span className="text-white">✨</span>
-                    </div>
-                  </div>
-                  <Button onClick={() => setShowProfileDialog(true)} className="bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg">
-                    Edit Profile
-                  </Button>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-pink-50 p-4 rounded-lg border-2 border-pink-100">
-                      <p className="text-sm text-pink-600">Full Name</p>
-                      <p className="font-medium text-pink-800">{personalInfo.name}</p>
-                    </div>
-                    <div className="bg-pink-50 p-4 rounded-lg border-2 border-pink-100">
-                      <p className="text-sm text-pink-600">Professional Title</p>
-                      <p className="font-medium text-pink-800">{personalInfo.title}</p>
-                    </div>
-                    <div className="bg-pink-50 p-4 rounded-lg border-2 border-pink-100">
-                      <p className="text-sm text-pink-600">Email</p>
-                      <p className="font-medium text-pink-800">{personalInfo.email}</p>
-                    </div>
-                    <div className="bg-pink-50 p-4 rounded-lg border-2 border-pink-100">
-                      <p className="text-sm text-pink-600">Phone</p>
-                      <p className="font-medium text-pink-800">{personalInfo.phone}</p>
-                    </div>
-                    <div className="bg-pink-50 p-4 rounded-lg border-2 border-pink-100">
-                      <p className="text-sm text-pink-600">Location</p>
-                      <p className="font-medium text-pink-800">{personalInfo.location}</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Application Summary */}
-            <Card className="shadow-xl border-2 border-pink-200 bg-gradient-to-br from-white to-pink-50">
-              <CardHeader>
-                <CardTitle className="text-pink-700">Application Summary 📊</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-pink-50 rounded-lg border-2 border-pink-100">
-                    <span className="text-pink-700">Total Applications</span>
-                    <span className="font-semibold text-pink-800">{applications.length}</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg border-2 border-blue-100">
-                    <span className="text-blue-700">Applied</span>
-                    <span className="font-semibold text-blue-600">
-                      {getStatusCount("applied")}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg border-2 border-yellow-100">
-                    <span className="text-yellow-700">Interviews</span>
-                    <span className="font-semibold text-yellow-600">
-                      {getStatusCount("interview")}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg border-2 border-green-100">
-                    <span className="text-green-700">Offers</span>
-                    <span className="font-semibold text-green-600">
-                      {getStatusCount("offer")}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg border-2 border-red-100">
-                    <span className="text-red-700">Rejected</span>
-                    <span className="font-semibold text-red-600">
-                      {getStatusCount("rejected")}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+          )}
+        </div>
       </main>
 
       {/* Dialogs */}

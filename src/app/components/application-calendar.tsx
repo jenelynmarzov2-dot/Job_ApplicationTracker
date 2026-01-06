@@ -27,9 +27,9 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
   const datesWithApplications = getDatesWithApplications();
 
   return (
-    <Card className="shadow-lg border-2 border-pink-100">
+    <Card className="shadow-lg border-2 border-blue-100">
       <CardHeader>
-        <CardTitle className="text-pink-600 text-center">Application Calendar</CardTitle>
+        <CardTitle className="text-blue-600 text-center">Application Calendar</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-6">
@@ -39,19 +39,19 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
-                className="rounded-lg border-2 border-pink-200 shadow-md"
+                className="rounded-lg border-2 border-blue-200 shadow-md"
                 modifiers={{
                   hasApplication: datesWithApplications,
                 }}
                 modifiersClassNames={{
-                  hasApplication: "bg-pink-200 font-semibold text-pink-800",
+                  hasApplication: "bg-blue-200 font-semibold text-blue-800",
                 }}
               />
             </div>
           </div>
           <div className="flex-1">
             <div className="space-y-3">
-              <h3 className="font-semibold text-pink-600">
+              <h3 className="font-semibold text-blue-600">
                 Applications on {selectedDate?.toLocaleDateString() || "Select a date"}
               </h3>
               {selectedDateApplications.length > 0 ? (
@@ -59,14 +59,14 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
                   {selectedDateApplications.map((app) => (
                     <div
                       key={app.id}
-                      className="p-4 border-2 border-pink-100 rounded-lg hover:bg-pink-50 transition-colors shadow-sm"
+                      className="p-4 border-2 border-blue-100 rounded-lg hover:bg-blue-50 transition-colors shadow-sm"
                     >
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="font-medium text-pink-800">{app.position}</p>
-                          <p className="text-sm text-pink-600">{app.company}</p>
+                          <p className="font-medium text-blue-800">{app.position}</p>
+                          <p className="text-sm text-blue-600">{app.company}</p>
                         </div>
-                        <Badge className="bg-pink-200 text-pink-800 border-pink-300">
+                        <Badge className="bg-blue-200 text-blue-800 border-blue-300">
                           {app.status}
                         </Badge>
                       </div>
@@ -74,7 +74,7 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
                   ))}
                 </div>
               ) : (
-                <p className="text-pink-400 text-sm">
+                <p className="text-blue-400 text-sm">
                   No applications on this date
                 </p>
               )}
