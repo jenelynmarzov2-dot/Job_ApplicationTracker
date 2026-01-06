@@ -70,6 +70,8 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
                       <TableHead className="text-blue-700">Company</TableHead>
                       <TableHead className="text-blue-700">Location</TableHead>
                       <TableHead className="text-blue-700">Status</TableHead>
+                      <TableHead className="text-blue-700">Applied Date</TableHead>
+                      <TableHead className="text-blue-700">Notes</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -83,6 +85,8 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
                             {app.status}
                           </Badge>
                         </TableCell>
+                        <TableCell className="text-blue-600">{app.appliedDate}</TableCell>
+                        <TableCell className="text-blue-600">{app.notes || "N/A"}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
