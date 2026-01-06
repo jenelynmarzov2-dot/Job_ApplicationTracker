@@ -22,7 +22,7 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
   // Get applications for the selected date
   const getApplicationsForDate = (date: Date | undefined) => {
     if (!date) return [];
-    const dateStr = date.toISOString().split("T")[0];
+    const dateStr = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
     return applications.filter((app) => app.appliedDate === dateStr);
   };
 
@@ -63,34 +63,36 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
                 Applications on {selectedDate?.toLocaleDateString() || "Select a date"}
               </h3>
               {selectedDateApplications.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-blue-700">Position</TableHead>
-                      <TableHead className="text-blue-700">Company</TableHead>
-                      <TableHead className="text-blue-700">Location</TableHead>
-                      <TableHead className="text-blue-700">Status</TableHead>
-                      <TableHead className="text-blue-700">Applied Date</TableHead>
-                      <TableHead className="text-blue-700">Notes</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {selectedDateApplications.map((app) => (
-                      <TableRow key={app.id}>
-                        <TableCell className="font-medium text-blue-800">{app.position}</TableCell>
-                        <TableCell className="text-blue-600">{app.company}</TableCell>
-                        <TableCell className="text-blue-600">{app.location}</TableCell>
-                        <TableCell>
-                          <Badge className="bg-blue-200 text-blue-800 border-blue-300">
-                            {app.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-blue-600">{app.appliedDate}</TableCell>
-                        <TableCell className="text-blue-600">{app.notes || "N/A"}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border border-blue-200">
+                    <thead>
+                      <tr className="bg-blue-50">
+                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Position</th>
+                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Company</th>
+                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Location</th>
+                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Status</th>
+                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Applied Date</th>
+                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedDateApplications.map((app) => (
+                        <tr key={app.id} className="hover:bg-blue-50">
+                          <td className="border border-blue-200 px-4 py-2 font-medium text-blue-800">{app.position}</td>
+                          <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.company}</td>
+                          <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.location}</td>
+                          <td className="border border-blue-200 px-4 py-2">
+                            <Badge className="bg-blue-200 text-blue-800 border-blue-300">
+                              {app.status}
+                            </Badge>
+                          </td>
+                          <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.appliedDate}</td>
+                          <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.notes || "N/A"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ) : (
                 <p className="text-blue-400 text-sm">
                   No applications
