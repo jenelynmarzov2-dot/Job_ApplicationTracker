@@ -28,12 +28,12 @@ const statusColors = {
 
 export function JobApplicationCard({ application, onEdit, onDelete }: JobApplicationCardProps) {
   return (
-    <Card className="hover:shadow-xl transition-all border-2 border-pink-100 bg-gradient-to-br from-white to-pink-50">
+    <Card className="hover:shadow-xl transition-all border-2 border-blue-100 bg-gradient-to-br from-white to-blue-50 z-10">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-1">
-            <CardTitle className="text-pink-700">{application.position}</CardTitle>
-            <div className="flex items-center gap-2 text-sm text-pink-600">
+            <CardTitle className="text-blue-700">{application.position}</CardTitle>
+            <div className="flex items-center gap-2 text-sm text-blue-600">
               <Building2 className="w-4 h-4" />
               <span>{application.company}</span>
             </div>
@@ -45,23 +45,23 @@ export function JobApplicationCard({ application, onEdit, onDelete }: JobApplica
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm text-pink-600">
+          <div className="flex items-center gap-2 text-sm text-blue-600">
             <MapPin className="w-4 h-4" />
             <span>{application.location}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-pink-600">
+          <div className="flex items-center gap-2 text-sm text-blue-600">
             <Calendar className="w-4 h-4" />
             <span>Applied: {application.appliedDate}</span>
           </div>
           {application.notes && (
-            <p className="text-sm text-pink-700 mt-2 bg-pink-50 p-2 rounded-lg">{application.notes}</p>
+            <p className="text-sm text-blue-700 mt-2 bg-blue-50 p-2 rounded-lg">{application.notes}</p>
           )}
           <div className="flex gap-2 pt-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => onEdit(application)}
-              className="flex-1 border-pink-200 text-pink-600 hover:bg-pink-50 hover:text-pink-700"
+              className="flex-1 border-blue-300 text-blue-600 hover:bg-blue-50 hover:text-blue-700 bg-white cursor-pointer"
             >
               <Edit className="w-4 h-4 mr-2" />
               Edit
@@ -70,7 +70,7 @@ export function JobApplicationCard({ application, onEdit, onDelete }: JobApplica
               variant="outline"
               size="sm"
               onClick={() => onDelete(application.id)}
-              className="text-red-500 hover:text-red-700 border-red-200 hover:bg-red-50"
+              className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 bg-white cursor-pointer"
             >
               <Trash2 className="w-4 h-4" />
             </Button>
