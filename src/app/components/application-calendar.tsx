@@ -70,36 +70,76 @@ export function ApplicationCalendar({ applications }: ApplicationCalendarProps) 
                 Applications on {selectedDate?.toLocaleDateString() || "Select a date"}
               </h3>
               {selectedDateApplications.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-blue-200">
-                    <thead>
-                      <tr className="bg-blue-50">
-                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Position</th>
-                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Company</th>
-                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Location</th>
-                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Status</th>
-                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Applied Date</th>
-                        <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Notes</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedDateApplications.map((app) => (
-                        <tr key={app.id} className="hover:bg-blue-50">
-                          <td className="border border-blue-200 px-4 py-2 font-medium text-blue-800">{app.position}</td>
-                          <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.company}</td>
-                          <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.location}</td>
-                          <td className="border border-blue-200 px-4 py-2">
-                            <Badge className={statusColors[app.status]}>
-                              {app.status}
-                            </Badge>
-                          </td>
-                          <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.appliedDate}</td>
-                          <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.notes || "N/A"}</td>
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full border-collapse border border-blue-200">
+                      <thead>
+                        <tr className="bg-blue-50">
+                          <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Position</th>
+                          <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Company</th>
+                          <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Location</th>
+                          <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Status</th>
+                          <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Applied Date</th>
+                          <th className="border border-blue-200 px-4 py-2 text-left text-blue-700">Notes</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {selectedDateApplications.map((app) => (
+                          <tr key={app.id} className="hover:bg-blue-50">
+                            <td className="border border-blue-200 px-4 py-2 font-medium text-blue-800">{app.position}</td>
+                            <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.company}</td>
+                            <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.location}</td>
+                            <td className="border border-blue-200 px-4 py-2">
+                              <Badge className={statusColors[app.status]}>
+                                {app.status}
+                              </Badge>
+                            </td>
+                            <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.appliedDate}</td>
+                            <td className="border border-blue-200 px-4 py-2 text-blue-600">{app.notes || "N/A"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="md:hidden space-y-3">
+                    {selectedDateApplications.map((app) => (
+                      <Card key={app.id} className="border border-blue-200 shadow-sm">
+                        <CardContent className="p-4">
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="font-semibold text-blue-800 text-lg">{app.position}</h4>
+                                <p className="text-blue-600 font-medium">{app.company}</p>
+                              </div>
+                              <Badge className={statusColors[app.status]}>
+                                {app.status}
+                              </Badge>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div>
+                                <span className="text-blue-500 font-medium">Location:</span>
+                                <p className="text-blue-700">{app.location}</p>
+                              </div>
+                              <div>
+                                <span className="text-blue-500 font-medium">Date:</span>
+                                <p className="text-blue-700">{app.appliedDate}</p>
+                              </div>
+                            </div>
+                            {app.notes && (
+                              <div>
+                                <span className="text-blue-500 font-medium text-sm">Notes:</span>
+                                <p className="text-blue-700 text-sm mt-1">{app.notes}</p>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </>
               ) : (
                 <p className="text-blue-400 text-sm">
                   No applications
